@@ -472,18 +472,18 @@ Use `python -m epi_cli` instead (always works). Or run `python -m epi_cli doctor
 
 ## 📚 Documentation
 
-- [**📘 CLI Reference**](https://epilabs.org/docs/cli) - All commands explained
-- [**🐍 Python API**](https://epilabs.org/docs/api) - Decorator and context manager
-- [**🏗️ Architecture**](https://epilabs.org/docs/architecture) - How EPI works
-- [**🔒 Security Model**](https://epilabs.org/docs/security) - Cryptography details
-- [**📖 Examples**](https://epilabs.org/docs/examples) - Real-world use cases
+- [**📘 CLI Reference**](docs/CLI.md) - All commands explained
+- [**📖 Quick Start Guide**](QUICKSTART.md) - Get started in 30 seconds
+- [**🏗️ Architecture**](docs/EPI-SPEC.md) - Technical specification
+- [**📝 Product Description**](EPI_Product_Description.md) - Detailed overview
+- [**📋 Examples**](examples/) - Real-world code examples
 
 ---
 
 ## 🤝 Community & Support
 
-- [**💬 Discussions**](https://github.com/mohdibrahimaiml/EPI-V2.0.0/discussions) - Ask questions, share use cases
-- [**🐛 Issues**](https://github.com/mohdibrahimaiml/EPI-V2.0.0/issues) - Bug reports, feature requests
+- [**💬 Discussions**](https://github.com/mohdibrahimaiml/EPI-V2.1.0/discussions) - Ask questions, share use cases
+- [**🐛 Issues**](https://github.com/mohdibrahimaiml/EPI-V2.1.0/issues) - Bug reports, feature requests
 - [**📧 Email**](mailto:epitechforworld@outlook.com) - Direct support
 - [**🌐 Website**](https://epilabs.org) - Latest news
 
