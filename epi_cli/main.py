@@ -231,43 +231,79 @@ def doctor():
     """
     [Doctor] Self-healing doctor. Fixes common issues silently.
     """
-    console.print("\n[bold blue]EPI Doctor[/bold blue]\n")
+    console.print("\n[bold blue]EPI Doctor - System Health Check[/bold blue]\n")
     
     issues = 0
+    fixed = 0
     
     # Check 1: Keys
     console.print("1. Security Keys: ", end="")
     from epi_cli.keys import generate_default_keypair_if_missing
     if generate_default_keypair_if_missing(console_output=False):
-        console.print("[green]FIXED (Generated)[/green]")
-        issues += 1
+        console.print("[green][OK] FIXED (Generated)[/green]")
+        fixed += 1
     else:
-        console.print("[green]OK[/green]")
+        console.print("[green][OK][/green]")
         
     # Check 2: Command on PATH
     console.print("2. 'epi' command: ", end="")
     import shutil
     if shutil.which("epi"):
-        console.print("[green]OK[/green]")
+        console.print("[green][OK][/green]")
     else:
-        console.print("[red]MISSING[/red]")
-        console.print("   [yellow]Run: python epi_setup.py[/yellow]")
+        console.print("[red][X] NOT IN PATH[/red]")
         issues += 1
+        
+        # Try to auto-fix on Windows
+        import platform
+        if platform.system() == "Windows":
+            console.print("   [cyan]→ Attempting automatic PATH fix...[/cyan]")
+            try:
+                import epi_postinstall
+                from pathlib import Path
+                
+                scripts_dir = epi_postinstall.get_scripts_dir()
+                if scripts_dir and scripts_dir.exists():
+                    console.print(f"   [dim]Scripts directory: {scripts_dir}[/dim]")
+                    
+                    if epi_postinstall.add_to_user_path_windows(scripts_dir):
+                        console.print("   [green][OK] PATH updated successfully![/green]")
+                        console.print("   [yellow][!] Please restart your terminal for changes to take effect[/yellow]")
+                        fixed += 1
+                    else:
+                        console.print("   [yellow][!] Could not update PATH automatically[/yellow]")
+                        console.print("   [dim]Manual fix: Use 'python -m epi_cli' instead[/dim]")
+                else:
+                    console.print("   [red][X] Could not locate Scripts directory[/red]")
+            except Exception as e:
+                console.print(f"   [red][X] Auto-fix failed: {e}[/red]")
+                console.print("   [dim]Workaround: Use 'python -m epi_cli' instead[/dim]")
+        else:
+            console.print("   [dim]Workaround: Use 'python -m epi_cli' instead[/dim]")
 
     # Check 3: Browser
     console.print("3. Browser Check: ", end="")
     try:
         import webbrowser
         webbrowser.get()
-        console.print("[green]OK[/green]")
+        console.print("[green][OK][/green]")
     except:
-        console.print("[yellow]WARNING (Headless?)[/yellow]")
+        console.print("[yellow][!] WARNING (Headless?)[/yellow]")
         
+    # Summary
     print()
+    console.print("[bold]" + "="*70 + "[/bold]")
     if issues == 0:
         console.print("[bold green][OK] System Healthy![/bold green]")
     else:
-        console.print(f"[bold yellow][!] Found {issues} issues.[/bold yellow]")
+        if fixed > 0:
+            console.print(f"[bold yellow][!] Fixed {fixed}/{issues} issues[/bold yellow]")
+            if fixed < issues:
+                console.print("[dim]Some issues require manual attention (see above)[/dim]")
+        else:
+            console.print(f"[bold yellow][!] Found {issues} issues[/bold yellow]")
+            console.print("[dim]See suggestions above[/dim]")
+    console.print("[bold]" + "="*70 + "[/bold]\n")
 
 
 # Entry point for CLI
