@@ -1,15 +1,15 @@
-# EPI File Format Specification v2.1.0
+# EPI File Format Specification v2.1.1
 
 **Status:** Active / Stable  
 **Date:** 2025-12-15  
-**Version:** 2.1.0  
+**Version:** 2.1.1
 **Authors:** EPI Project Team
 
 ---
 
 ## Abstract
 
-The **Executable Package for AI (EPI)** format provides a standardized, portable, and verifiable container for AI evidence. This specification defines the structure, serialization, and verification mechanisms for `.epi` files as implemented in `epi-recorder` v2.1.0.
+The **Executable Package for AI (EPI)** format provides a standardized, portable, and verifiable container for AI evidence. This specification defines the structure, serialization, and verification mechanisms for `.epi` files as implemented in `epi-recorder` v2.1.1.
 
 ---
 
@@ -18,7 +18,7 @@ The **Executable Package for AI (EPI)** format provides a standardized, portable
 ### 1.1 Purpose
 EPI files capture complete AI workflows—code, inputs, model interactions, outputs, and environment—into a single, cryptographically verifiable ZIP-based container.
 
-### 1.2 Key Features (v2.1.0)
+### 1.2 Key Features (v2.1.1)
 - **Offline-First Viewer:** Embedded HTML/CSS/JS requires no internet connection.
 - **Ed25519 Signing:** Tamper-proof signatures using standard crypto keys.
 - **Content-Addressing:** Artifacts stored by SHA-256 hash to deduplicate storage.
@@ -51,7 +51,7 @@ The source of truth for the package.
 
 ```json
 {
-  "spec_version": "2.1.0",
+  "spec_version": "2.1.1",
   "workflow_id": "uuid...",
   "created_at": "iso-8601...",
   "cli_command": "epi run script.py",
@@ -68,7 +68,7 @@ The source of truth for the package.
 ### 2.3 Timeline (`steps.jsonl`)
 Newline-Delimited JSON storage of events.
 
-**Step Types (v2.1.0):**
+**Step Types (v2.1.1):**
 - `shell.command`: CLI interactions.
 - `python.call`: Function traces.
 - `llm.request` / `llm.response`: Model interactions.
@@ -93,7 +93,7 @@ Newline-Delimited JSON storage of events.
 
 | Version | Date | Status | Changes |
 |:---|:---|:---|:---|
-| **2.1.0** | 2025-12-15 | **Current** | Offline viewer (no CDN), Windows paths fix, Interactive Mode. |
+| **2.1.1** | 2025-12-15 | **Current** | Offline viewer (no CDN), Windows paths fix, Interactive Mode. |
 | **2.0.0** | 2025-12-01 | MVP | Production release, CLI polish. |
 | **1.0.0** | 2025-01-29 | Legacy | "Keystone" draft spec. |
 
