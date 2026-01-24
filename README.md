@@ -8,12 +8,12 @@
 
 **Cryptographic proof of what Autonomous AI Systems actually did.**
 
-[![PyPI](https://img.shields.io/pypi/v/epi-recorder?style=flat&color=blue&label=PyPI&logo=pypi&logoColor=white)](https://pypi.org/project/epi-recorder/)
+[![PyPI](https://img.shields.io/badge/PyPI-v2.1.3-blue?style=flat&logo=pypi&logoColor=white)](https://pypi.org/project/epi-recorder/)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg?style=flat)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-v2.1.3-blue?style=flat)](https://github.com/mohdibrahimaiml/EPI-V2.1.2)
-[![Downloads](https://img.shields.io/pypi/dm/epi-recorder?style=flat&color=blue&label=Downloads)](https://pypi.org/project/epi-recorder/)
-[![Stars](https://img.shields.io/github/stars/mohdibrahimaiml/EPI-V2.0.0?style=social)](https://github.com/mohdibrahimaiml/EPI-V2.1.2)
+[![Status](https://img.shields.io/badge/Status-v2.1.3-blue?style=flat)](https://github.com/mohdibrahimaiml/EPI-V2.1.3)
+[![Downloads](https://img.shields.io/badge/Downloads-3.8k-blue?style=flat)](https://pypi.org/project/epi-recorder/)
+[![Stars](https://img.shields.io/badge/Stars-16-ea4aaa?style=social&logo=github)](https://github.com/mohdibrahimaiml/EPI-V2.1.3)
 
 [**🚀 Quick Start**](#-quick-start-30-seconds) • [**📖 Docs**](https://epilabs.org/docs) • [**💬 Community**](https://github.com/mohdibrahimaiml/EPI-V2.1.3/discussions) • [**🎥 Demo**](https://colab.research.google.com/github/mohdibrahimaiml/EPI-V2.1.3/blob/main/colab_demo.ipynb)
 
