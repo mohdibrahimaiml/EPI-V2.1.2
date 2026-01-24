@@ -15,6 +15,7 @@ The **Evidence Packaged Infrastructure (EPI)** CLI is the primary tool for recor
 | `epi run <script.py>` | **Zero-Config Record.** Records, verifies, and views in one go. |
 | `epi view <file.epi>` | **Open Viewer.** Opens the browser timeline for a recording. |
 | `epi verify <file.epi>` | **Check Integrity.** Validates signatures and hashes. |
+| `epi chat <file.epi>` | **AI Chat.** Query your evidence using Google Gemini (Natural Language). |
 | `epi ls` | **List Recordings.** Shows files in your `./epi-recordings/` folder. |
 | `epi doctor` | **Self-Healing.** Fixes common environment issues (paths, keys, deps). |
 
@@ -100,6 +101,25 @@ $ epi doctor
 ✅ Path verified
 ✅ ASCII encoding fixed
 ```
+
+```
+
+### `epi chat <file.epi>`
+**Talk to your evidence.**  
+Powered by Google Gemini. This interactive command loads the evidence context and lets you ask questions like "What errors occurred?" or "Why did the AI make this decision?".
+
+**Usage:**
+```bash
+$ epi chat my_run.epi
+# -> Loading evidence...
+# -> Combined context: 1243 steps
+# -> AI: Hello! Ask me anything about this run.
+# You: Did any API calls fail?
+```
+
+**Requirements:**
+- `GOOGLE_API_KEY` environment variable must be set.
+- A `.epi` file (inputs are loaded into the LLM context).
 
 ---
 

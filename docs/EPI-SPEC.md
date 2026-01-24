@@ -22,6 +22,7 @@ EPI files capture complete AI workflows—code, inputs, model interactions, outp
 - **Offline-First Viewer:** Embedded HTML/CSS/JS requires no internet connection.
 - **Ed25519 Signing:** Tamper-proof signatures using standard crypto keys.
 - **Content-Addressing:** Artifacts stored by SHA-256 hash to deduplicate storage.
+- **Gemini Native:** Automatic interception of `google.generativeai` calls (v2.1.3).
 - **Privacy-Aware:** Automatic regex-based redaction of API keys and secrets.
 
 ---
