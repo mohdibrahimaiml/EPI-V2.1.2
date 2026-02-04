@@ -96,7 +96,7 @@ While EPI is built for daily debugging, it provides the cryptographic infrastruc
 -   **Standards**: Supports EU AI Act Article 6 logging requirements.
 -   **Privacy**: Automatic PII redaction, air-gapped operation (no cloud required).
 
-*[Enterprise support available](mailto:enterprise@epilabs.org) for SOC2/ISO27001 environments.*
+
 
 ---
 
