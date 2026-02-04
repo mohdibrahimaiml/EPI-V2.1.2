@@ -6,11 +6,12 @@
 
 [![Release](https://img.shields.io/github/v/release/mohdibrahimaiml/epi-recorder?label=release&style=flat-square&color=00d4ff)](https://github.com/mohdibrahimaiml/epi-recorder/releases)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square&logo=python&logoColor=white)](https://pypi.org/project/epi-recorder/)
-[![License](https://img.shields.io/badge/license-Apache--2.0-green?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 [![Downloads](https://img.shields.io/pypi/dm/epi-recorder?style=flat-square&color=10b981)](https://pypi.org/project/epi-recorder/)
-[![Users](https://img.shields.io/badge/users-4.5K%2B-orange?style=flat-square&color=f59e0b)](#)
+[![Users](https://img.shields.io/badge/users-6K%2B-orange?style=flat-square&color=f59e0b)](#)
 
 **The Flight Recorder for AI Agents**
+*The PDF for AI Evidence*
 
 Debug production failures in LangChain, CrewAI, and custom agents with one command.
 Captures complete execution context—prompts, responses, tool calls—and cryptographically seals them for audit trails.
@@ -23,8 +24,8 @@ Captures complete execution context—prompts, responses, tool calls—and crypt
 ---
 
 ## Traction
-- **4,000+** developers using EPI for daily debugging
-- **12,000+** agent executions recorded
+- **6,000+** developers using EPI for daily debugging
+- **20,000+** agent executions recorded
 - **99.9%** atomic capture rate (zero data loss on crashes)
 
 ---
@@ -99,6 +100,19 @@ While EPI is built for daily debugging, it provides the cryptographic infrastruc
 
 ---
 
+---
+## Release History
+
+| Version | Date | Highlights |
+|:---|:---|:---|
+| **v2.2.0** | 2026-01-30 | 🚀 **Agent Debugging**, SQLite Crash Safety, Thread-Safe Context, MIT License, Async Support |
+| **v2.1.3** | 2026-01-24 | ♊ **Gemini Support**, `epi chat` (AI querying), Windows fixes |
+| **v2.1.2** | 2026-01-17 | 🔐 **Client-Side Verification**, Ed25519 offline checks, Viewer security update |
+| **v2.1.1** | 2025-12-16 | 🛠️ **Installation Fixes**, Auto-PATH repair, `epi doctor` |
+| **v2.1.0** | 2025-12-XX | ✨ **Major Release**, `epi run` zero-config, Ed25519 signatures, new Viewer |
+
+---
+
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
@@ -112,7 +126,7 @@ pytest
 
 ## License
 
-Apache-2.0 License. See [LICENSE](./LICENSE) for details.
+MIT License. See [LICENSE](./LICENSE) for details.
 
 
  
