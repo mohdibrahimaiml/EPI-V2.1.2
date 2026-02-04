@@ -2,6 +2,7 @@
   <img src="https://raw.githubusercontent.com/mohdibrahimaiml/epi-recorder/main/docs/assets/logo.png" alt="EPI Logo" width="200"/>
   <br>
   <h1 align="center">EPI Recorder</h1>
+  <p align="center"><strong>The PDF for AI Evidence</strong></p>
 </p>
 
 [![Release](https://img.shields.io/github/v/release/mohdibrahimaiml/epi-recorder?label=release&style=flat-square&color=00d4ff)](https://github.com/mohdibrahimaiml/epi-recorder/releases)
@@ -9,236 +10,158 @@
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 [![Downloads](https://img.shields.io/pypi/dm/epi-recorder?style=flat-square&color=10b981)](https://pypi.org/project/epi-recorder/)
 
-**The Flight Recorder for AI Agents**
-*Like a PDF for AI Evidence*
+---
 
-Debug production failures in LangChain, CrewAI, and custom agents with one command.
-Captures complete execution context—prompts, responses, tool calls—and cryptographically seals them for verification.
+## The Problem
+
+Before PDF, you couldn't trust a document. Was this the original? Was it edited? Could the other person even open it?
+
+**PDF solved that.** One file. Opens anywhere. Tamper-evident.
+
+Now we have the same problem with AI.
+
+Your AI agent ran overnight. It made decisions. It spent money. It failed. **What actually happened?**
+
+- Your logs are scattered across services
+- You can't prove they weren't edited
+- The context is incomplete
+- You're taking screenshots and pasting JSON into Slack
 
 ---
 
-## Table of Contents
+## The Solution
 
-- [Quick Start](#quick-start)
-- [Why EPI?](#why-epi)
-- [Features](#features)
-- [CLI Reference](#cli-reference)
-- [Python API](#python-api)
-- [File Format Specification](#file-format-specification)
-- [How It Works](#how-it-works)
-- [Security](#security)
-- [Release History](#release-history)
-- [Contributing](#contributing)
-- [License](#license)
+**EPI is the PDF for AI evidence.**
 
----
-
-## Quick Start
+One `.epi` file contains:
+- ✅ **Every prompt and response** — Complete context, not fragments
+- ✅ **Cryptographic signature** — Proof it wasn't tampered with
+- ✅ **Embedded viewer** — Opens in any browser, no software needed
+- ✅ **Offline verification** — Works air-gapped, no cloud required
 
 ```bash
 pip install epi-recorder
 
-# Record your agent (zero config)
-epi run agent.py
+# Record everything your agent does
+epi run my_agent.py
 
-# View the recording (opens browser)
+# Open proof in browser
 epi view recording.epi
 
-# Verify integrity (cryptographic proof)
+# Verify it hasn't been tampered with
 epi verify recording.epi
 ```
 
 ---
 
-## Why EPI?
+## What Makes This Revolutionary?
 
-Your AI agent failed in production. It hallucinated. It looped infinitely. It cost you $50 in API calls.
+PDF became the universal document format because of three properties. EPI has the same three:
 
-**You can't reproduce it.** LLMs are non-deterministic. Your logs don't show the full prompt context. You're taking screenshots and pasting JSON into Slack.
+| Property | PDF | EPI |
+|:---|:---|:---|
+| **Self-Contained** | Fonts, images, layout — all in one file | Prompts, responses, environment — all in one file |
+| **Universally Viewable** | Opens in any browser or reader | Opens in any browser (embedded HTML viewer) |
+| **Tamper-Evident** | Digital signatures prove authenticity | Ed25519 signatures prove logs weren't edited |
 
-**EPI is the black box.** One command captures everything. Debug locally. Prove what happened.
-
----
-
-## Features
-
-| Feature | Description |
-|:---|:---|
-| **⚡ Zero Config** | `epi run` intercepts OpenAI, Gemini, LangChain, CrewAI automatically—no code changes. |
-| **🔍 Debug Tools** | `epi debug` analyzes recordings for loops, hallucinations, and inefficiencies. |
-| **🛡️ Crash Safe** | Atomic SQLite storage survives OOM and power failures. |
-| **🔐 Tamper Proof** | Ed25519 signatures prove logs weren't edited. |
-| **🌐 Framework Agnostic** | Works with any Python agent. |
-| **♊ Gemini Native** | Automatic interception of `google.generativeai` calls. |
-| **🧵 Thread-Safe** | Uses `contextvars` for concurrent agent support. |
-| **⚡ Async Support** | Native `async/await` support for modern frameworks. |
-
----
-
-## CLI Reference
-
-### Core Commands
-
-| Command | Description |
-|:---|:---|
-| `epi init` | Interactive Setup Wizard. Creates keys, runs a demo. |
-| `epi run <script.py>` | Zero-Config Record. Records, verifies, and views in one go. |
-| `epi debug <file.epi>` | AI Bug Detection. Finds loops, hallucinations, inefficiencies. |
-| `epi view <file.epi>` | Open Viewer. Opens the browser timeline for a recording. |
-| `epi verify <file.epi>` | Check Integrity. Validates signatures and hashes. |
-| `epi chat <file.epi>` | AI Chat. Query your evidence using Google Gemini. |
-| `epi ls` | List Recordings. Shows files in `./epi-recordings/`. |
-| `epi doctor` | Self-Healing. Fixes common environment issues. |
-
-### Examples
-
-```bash
-# Record with specific filename
-epi record --out experiment_1.epi -- python agent.py
-
-# Verify with verbose output
-epi verify --verbose demo.epi
-
-# Debug to find agent bugs
-epi debug agent_session.epi
-
-# Chat with your evidence (requires GOOGLE_API_KEY)
-epi chat my_run.epi
-```
-
-### Key Management
-
-| Command | Description |
-|:---|:---|
-| `epi keys list` | Show all keys in `~/.epi/keys/`. |
-| `epi keys generate` | Create a new Ed25519 keypair. |
-| `epi keys export --name <k>` | Export public key for verification elsewhere. |
-
----
-
-## Python API
-
-For deeper integration, import `epi_recorder` in your code.
-
-```python
-from epi_recorder import record
-
-# Method 1: Decorator
-@record(goal="Test Model Accuracy")
-def main():
-    # Your agent code here
-    ...
-
-# Method 2: Context Manager
-with record("my_evidence.epi"):
-    agent.run()
-```
-
----
-
-## File Format Specification
-
-### Overview
-
-`.epi` files are **ZIP archives** containing cryptographically verifiable AI execution logs.
-
-**MIME Type:** `application/epi+zip`
-
-### Container Structure
-
-```text
-example.epi (ZIP archive)
-├── mimetype                    # "application/epi+zip" (MUST be first)
-├── manifest.json               # Metadata + signatures + hashes
-├── steps.jsonl                 # Timeline (NDJSON format)
-├── env.json                    # Environment snapshot
-├── artifacts/                  # Content-addressed outputs
-│   └── sha256_<hash>
-└── viewer/                     # Embedded Offline Viewer
-    ├── index.html
-    └── viewer_lite.css
-```
-
-### Manifest Schema
-
-The `manifest.json` is the source of truth for the package:
-
-```json
-{
-  "spec_version": "1.1-json",
-  "workflow_id": "uuid...",
-  "created_at": "iso-8601...",
-  "cli_command": "epi run script.py",
-  "env_snapshot_hash": "sha256...",
-  "file_manifest": {
-    "steps.jsonl": "sha256...",
-    "env.json": "sha256..."
-  },
-  "signature": "ed25519:<base64_signature>"
-}
-```
-
-### Step Types
-
-The `steps.jsonl` file uses Newline-Delimited JSON with these event types:
-
-| Type | Description |
-|:---|:---|
-| `llm.request` | Outgoing LLM API call (prompt, model, parameters) |
-| `llm.response` | Incoming LLM response (text, token usage) |
-| `python.call` | Function traces |
-| `file.write` | File creation events |
-| `security.redaction` | Documented scrubbing of secrets |
-
-### Verification Algorithm
-
-1. **Structural Check:** Unzip and validate manifest existence.
-2. **Integrity Check:** Re-hash all files and compare with `file_manifest`.
-3. **Authenticity Check:** Verify Ed25519 signature using public key.
+**The difference:** PDFs contain *documents*. EPIs contain *proof of what an AI actually did*.
 
 ---
 
 ## How It Works
 
-EPI injects instrumentation at the Python runtime level via `sitecustomize.py`.
-
-1. **Intercept**: Captures LLM calls at the HTTP layer and library level.
-2. **Store**: Atomic SQLite WAL ensures data safety on crashes.
-3. **Analyze**: `epi debug` uses heuristics to find root causes.
-4. **Seal**: Ed25519 signatures create verifiable evidence.
-
-```mermaid
-graph LR
-    Script[User Script] -->|Intercept| Patcher[EPI Patcher]
-    Patcher -->|Write| WAL[(Atomic SQLite)]
-    WAL -->|Package| File[.epi File]
-    File -->|Sign| Key[Ed25519 Key]
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    YOUR AGENT RUNS                          │
+│                                                             │
+│   Agent calls OpenAI ──► EPI intercepts ──► Records call   │
+│   Agent calls Gemini ──► EPI intercepts ──► Records call   │
+│   Agent makes HTTP   ──► EPI intercepts ──► Records call   │
+│                                                             │
+│                    ▼                                        │
+│              .epi file created                              │
+│              (signed + sealed)                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Supported Libraries
+**Zero code changes.** EPI uses Python's `sitecustomize.py` to inject instrumentation before your code runs. It intercepts LLM calls at the library level—your agent doesn't know it's being recorded.
 
-| Library | Support |
+**Crash-safe.** Every step is written to SQLite immediately. Power goes out? The evidence survives.
+
+**Signed.** When recording finishes, EPI seals everything with an Ed25519 signature. Change one byte, the signature breaks.
+
+---
+
+## The .epi File Format
+
+An `.epi` file is a ZIP archive with a defined structure:
+
+```text
+evidence.epi
+├── mimetype              # "application/epi+zip"
+├── manifest.json         # Metadata + cryptographic signature
+├── steps.jsonl           # Every LLM call (NDJSON format)
+├── env.json              # Python version, packages, env vars
+└── viewer/
+    └── index.html        # Self-contained offline viewer
+```
+
+**Open it in any browser.** Double-click the embedded `viewer/index.html` and you see a complete timeline of what happened, with verification status.
+
+---
+
+## CLI Reference
+
+| Command | What It Does |
 |:---|:---|
-| OpenAI | ✅ Full (chat, completions) |
-| Google Gemini | ✅ Full (generativeai) |
-| LangChain | ✅ Via HTTP interception |
-| CrewAI | ✅ Via HTTP interception |
-| Anthropic | ✅ Via HTTP interception |
-| Any HTTP | ✅ Via `requests.Session` patching |
+| `epi run <script.py>` | Record everything, save as `.epi` |
+| `epi view <file.epi>` | Open the timeline viewer in browser |
+| `epi verify <file.epi>` | Check cryptographic integrity |
+| `epi debug <file.epi>` | Analyze for bugs (loops, hallucinations) |
+| `epi chat <file.epi>` | Ask questions about the recording (via Gemini) |
+| `epi init` | Interactive setup wizard |
+| `epi doctor` | Fix common environment issues |
+
+---
+
+## Python API
+
+```python
+from epi_recorder import record
+
+# Decorator
+@record(goal="Test trading strategy")
+def run_agent():
+    ...
+
+# Context manager
+with record("evidence.epi"):
+    agent.run()
+```
 
 ---
 
 ## Security
 
-EPI provides cryptographic infrastructure for verifiable AI logging:
-
-| Feature | Implementation |
+| Layer | Implementation |
 |:---|:---|
-| **Signatures** | Ed25519 with client-side verification |
-| **Hashing** | SHA-256 for content integrity |
-| **Serialization** | Canonical CBOR for deterministic hashing |
-| **Redaction** | Automatic API key and secret removal |
-| **Offline** | Air-gapped operation, no cloud required |
+| **Signatures** | Ed25519 (same as Signal, SSH) |
+| **Hashing** | SHA-256 content addressing |
+| **Redaction** | Automatic API key removal |
+| **Verification** | Client-side, zero-knowledge |
+
+---
+
+## Supported Frameworks
+
+| Framework | Support |
+|:---|:---|
+| OpenAI | ✅ Native interception |
+| Google Gemini | ✅ Native interception |
+| LangChain | ✅ HTTP layer capture |
+| CrewAI | ✅ HTTP layer capture |
+| Anthropic | ✅ HTTP layer capture |
+| Custom agents | ✅ Any `requests`/`httpx` calls |
 
 ---
 
@@ -246,17 +169,14 @@ EPI provides cryptographic infrastructure for verifiable AI logging:
 
 | Version | Date | Highlights |
 |:---|:---|:---|
-| **v2.2.0** | 2026-01-30 | Agent Debugging, SQLite Storage, Thread-Safe, MIT License, Async |
-| **v2.1.3** | 2026-01-24 | Gemini Support, `epi chat` command |
-| **v2.1.2** | 2026-01-17 | Client-Side Verification |
-| **v2.1.1** | 2025-12-16 | Installation Fixes, `epi doctor` |
-| **v2.1.0** | 2025-12-15 | Initial Release |
+| **v2.2.0** | 2026-01-30 | Agent debugging, SQLite storage, async support |
+| **v2.1.3** | 2026-01-24 | Gemini support, `epi chat` |
+| **v2.1.2** | 2026-01-17 | Client-side signature verification |
+| **v2.1.0** | 2025-12-15 | Initial release |
 
 ---
 
 ## Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
 ```bash
 git clone https://github.com/mohdibrahimaiml/epi-recorder.git
@@ -265,8 +185,10 @@ pip install -e ".[dev]"
 pytest
 ```
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
 ---
 
 ## License
 
-MIT License. See [LICENSE](./LICENSE) for details.
+MIT License. See [LICENSE](./LICENSE).
