@@ -82,7 +82,7 @@ epi verify evidence.epi
 
 ## The `.epi` Artifact Format
 
-An `.epi` file is a ZIP archive with a defined structure:
+An `.epi` file is a ZIP archive with a defined structure. See [docs/EPI-SPEC.md](docs/EPI-SPEC.md) for the full specification.
 
 ```
 evidence.epi
