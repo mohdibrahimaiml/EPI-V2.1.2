@@ -56,11 +56,10 @@ def test_workflow():
         print(f"\n[WORKSPACE] Working directory: {tmpdir}\n")
         
         # Test 1: Check package is installed
-        if not run_command(
+        assert run_command(
             "python -c \"import epi_recorder; print(f'Version: {epi_recorder.__version__}')\"",
             "Test 1: Import epi_recorder package"
-        ):
-            return False
+        ), "Package import failed"
         
         # Test 2: CLI is available
         if not run_command(
@@ -288,7 +287,7 @@ else:
         print(f"  [OK] {len(epi_files)} .epi files created and verified")
         print("\n[READY] The package is ready for real users!")
         
-        return True
+        # All tests passed
 
 
 if __name__ == "__main__":

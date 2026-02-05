@@ -47,6 +47,9 @@ class RecordingContext:
         
         # Keep JSONL path for backwards compatibility
         self.steps_file = self.output_dir / "steps.jsonl"
+        
+        # Create empty steps.jsonl file immediately (for tests and early access)
+        self.steps_file.touch(exist_ok=True)
     
     def add_step(self, kind: str, content: Dict[str, Any]) -> None:
         """
@@ -171,8 +174,9 @@ def _patch_openai_v1() -> bool:
         from openai import OpenAI
         from openai.resources.chat import completions
         
-        # Store original method
+        # Store original method for unpatching
         original_create = completions.Completions.create
+        _original_methods["openai.chat.completions.create"] = original_create
         
         @wraps(original_create)
         def wrapped_create(self, *args, **kwargs):
@@ -550,17 +554,53 @@ def patch_all() -> Dict[str, bool]:
     return results
 
 
+# Store original methods for unpatching
+_original_methods: Dict[str, Any] = {}
+
+
 def unpatch_all() -> None:
     """
     Unpatch all providers (restore original methods).
     
-    Note: This is a placeholder for future implementation.
-    Full unpatching requires storing original methods.
+    Restores any methods that were patched by patch_all(), patch_openai(),
+    patch_gemini(), or patch_requests().
     """
-    # For MVP, we don't implement unpatching
-    # In production, store original methods and restore them
-    pass
-
+    global _original_methods
+    
+    # Restore OpenAI v1+ if patched
+    if "openai.chat.completions.create" in _original_methods:
+        try:
+            from openai.resources.chat import completions
+            completions.Completions.create = _original_methods["openai.chat.completions.create"]
+        except ImportError:
+            pass
+    
+    # Restore OpenAI legacy if patched
+    if "openai.ChatCompletion.create" in _original_methods:
+        try:
+            import openai
+            openai.ChatCompletion.create = _original_methods["openai.ChatCompletion.create"]
+        except (ImportError, AttributeError):
+            pass
+    
+    # Restore Gemini if patched
+    if "gemini.generate_content" in _original_methods:
+        try:
+            import google.generativeai as genai
+            genai.GenerativeModel.generate_content = _original_methods["gemini.generate_content"]
+        except ImportError:
+            pass
+    
+    # Restore requests if patched
+    if "requests.Session.request" in _original_methods:
+        try:
+            import requests
+            requests.Session.request = _original_methods["requests.Session.request"]
+        except ImportError:
+            pass
+    
+    # Clear stored originals
+    _original_methods.clear()
 
 
  

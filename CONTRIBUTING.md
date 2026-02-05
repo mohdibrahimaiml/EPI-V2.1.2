@@ -155,12 +155,11 @@ When adding features:
 - Be respectful and inclusive
 - Help others learn and grow
 - Give constructive feedback
-- Follow our [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## 📬 Getting Help
 
-- **Questions**: Use [GitHub Discussions](https://github.com/epilabs/epi-recorder/discussions)
-- **Bugs**: Create an [Issue](https://github.com/epilabs/epi-recorder/issues)
+- **Questions**: Use [GitHub Discussions](https://github.com/mohdibrahimaiml/epi-recorder/discussions)
+- **Bugs**: Create an [Issue](https://github.com/mohdibrahimaiml/epi-recorder/issues)
 - **Email**: mohdibrahim@epilabs.org
 
 ## 🎯 Priority Areas
@@ -174,7 +173,7 @@ We especially welcome contributions in:
 
 ## 📄 License
 
-By contributing, you agree that your contributions will be licensed under the Apache License 2.0.
+By contributing, you agree that your contributions will be licensed under the MIT License.
 
 ---
 

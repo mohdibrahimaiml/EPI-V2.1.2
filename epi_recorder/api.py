@@ -54,6 +54,8 @@ class EpiRecorderSession:
         metrics: Optional[Dict[str, Union[float, str]]] = None,
         approved_by: Optional[str] = None,
         metadata_tags: Optional[List[str]] = None,  # Renamed to avoid conflict with tags parameter
+        # Legacy mode (deprecated)
+        legacy_patching: bool = False,
     ):
         """
         Initialize EPI recording session.
@@ -70,6 +72,7 @@ class EpiRecorderSession:
             metrics: Key-value metrics for this workflow (accuracy, latency, etc.)
             approved_by: Person or entity who approved this workflow execution
             metadata_tags: Tags for categorizing this workflow (renamed from tags to avoid conflict)
+            legacy_patching: Enable deprecated monkey patching mode (default: False)
         """
         self.output_path = Path(output_path)
         self.workflow_name = workflow_name or "untitled"
@@ -84,6 +87,9 @@ class EpiRecorderSession:
         self.metrics = metrics
         self.approved_by = approved_by
         self.metadata_tags = metadata_tags
+        
+        # Legacy mode flag (deprecated)
+        self.legacy_patching = legacy_patching
         
         # Runtime state
         self.temp_dir: Optional[Path] = None
@@ -117,9 +123,17 @@ class EpiRecorderSession:
         set_recording_context(self.recording_context)
         _thread_local.active_session = self
         
-        # Patch LLM libraries and HTTP
-        from epi_recorder.patcher import patch_all
-        patch_all()
+        # Only patch LLM libraries if legacy mode is enabled (deprecated)
+        if self.legacy_patching:
+            import warnings
+            warnings.warn(
+                "legacy_patching is deprecated and will be removed in v3.0.0. "
+                "Use epi.log_llm_call() or wrapper clients (wrap_openai) instead.",
+                DeprecationWarning,
+                stacklevel=2
+            )
+            from epi_recorder.patcher import patch_all
+            patch_all()
         
         # Log session start
         self.log_step("session.start", {
@@ -249,6 +263,172 @@ class EpiRecorderSession:
             "timestamp": datetime.utcnow().isoformat(),
             **response_payload
         })
+    
+    def log_llm_call(
+        self, 
+        response: Any, 
+        messages: Optional[List[Dict[str, str]]] = None,
+        provider: str = "auto"
+    ) -> None:
+        """
+        Log a complete LLM call (request + response) from any provider.
+        
+        Auto-detects OpenAI, Anthropic, and Gemini response objects.
+        This is the RECOMMENDED way to log LLM calls without monkey patching.
+        
+        Args:
+            response: The LLM response object (OpenAI, Anthropic, Gemini, etc.)
+            messages: Optional original messages (for request logging)
+            provider: Provider name ("auto" to detect, or "openai", "anthropic", etc.)
+            
+        Example:
+            with record("my_agent.epi") as epi:
+                response = client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[{"role": "user", "content": "Hello"}]
+                )
+                epi.log_llm_call(response, messages=[{"role": "user", "content": "Hello"}])
+        """
+        if not self._entered:
+            raise RuntimeError("Cannot log LLM call outside of context manager")
+        
+        # Auto-detect provider and extract data
+        model = "unknown"
+        content = ""
+        usage = None
+        choices = []
+        
+        # Try OpenAI format
+        if hasattr(response, "choices") and hasattr(response, "model"):
+            provider = "openai" if provider == "auto" else provider
+            model = getattr(response, "model", "unknown")
+            
+            for choice in response.choices:
+                msg = choice.message
+                choices.append({
+                    "message": {
+                        "role": getattr(msg, "role", "assistant"),
+                        "content": getattr(msg, "content", ""),
+                    },
+                    "finish_reason": getattr(choice, "finish_reason", None),
+                })
+                if not content:
+                    content = getattr(msg, "content", "")
+            
+            if hasattr(response, "usage") and response.usage:
+                usage = {
+                    "prompt_tokens": getattr(response.usage, "prompt_tokens", 0),
+                    "completion_tokens": getattr(response.usage, "completion_tokens", 0),
+                    "total_tokens": getattr(response.usage, "total_tokens", 0),
+                }
+        
+        # Try Anthropic format
+        elif hasattr(response, "content") and hasattr(response, "model"):
+            provider = "anthropic" if provider == "auto" else provider
+            model = getattr(response, "model", "unknown")
+            
+            # Anthropic returns content as a list of content blocks
+            content_blocks = getattr(response, "content", [])
+            if content_blocks and hasattr(content_blocks[0], "text"):
+                content = content_blocks[0].text
+            choices = [{"message": {"role": "assistant", "content": content}}]
+            
+            if hasattr(response, "usage"):
+                usage = {
+                    "input_tokens": getattr(response.usage, "input_tokens", 0),
+                    "output_tokens": getattr(response.usage, "output_tokens", 0),
+                }
+        
+        # Try Gemini format
+        elif hasattr(response, "text") and hasattr(response, "candidates"):
+            provider = "gemini" if provider == "auto" else provider
+            model = "gemini"
+            content = getattr(response, "text", "")
+            choices = [{"message": {"role": "assistant", "content": content}}]
+        
+        # Fallback: try to extract as dict or string
+        else:
+            provider = provider if provider != "auto" else "unknown"
+            if isinstance(response, dict):
+                content = str(response.get("content", response))
+            else:
+                content = str(response)
+            choices = [{"message": {"role": "assistant", "content": content}}]
+        
+        # Log request if messages provided
+        if messages:
+            self.log_step("llm.request", {
+                "provider": provider,
+                "model": model,
+                "messages": messages,
+                "timestamp": datetime.utcnow().isoformat(),
+            })
+        
+        # Log response
+        response_data = {
+            "provider": provider,
+            "model": model,
+            "choices": choices,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+        if usage:
+            response_data["usage"] = usage
+        
+        self.log_step("llm.response", response_data)
+    
+    def log_chat(
+        self,
+        model: str,
+        messages: List[Dict[str, str]],
+        response_content: str,
+        provider: str = "custom",
+        usage: Optional[Dict[str, int]] = None,
+        **metadata
+    ) -> None:
+        """
+        Simplified logging for chat completions.
+        
+        Use this when you have the raw data instead of response objects.
+        
+        Args:
+            model: Model name (e.g., "gpt-4", "claude-3")
+            messages: The messages sent to the model
+            response_content: The assistant's response text
+            provider: Provider name (default: "custom")
+            usage: Optional token usage dict
+            **metadata: Additional metadata to include
+            
+        Example:
+            epi.log_chat(
+                model="gpt-4",
+                messages=[{"role": "user", "content": "Hello"}],
+                response_content="Hi there!",
+                tokens=150
+            )
+        """
+        if not self._entered:
+            raise RuntimeError("Cannot log chat outside of context manager")
+        
+        # Log request
+        self.log_step("llm.request", {
+            "provider": provider,
+            "model": model,
+            "messages": messages,
+            "timestamp": datetime.utcnow().isoformat(),
+            **metadata
+        })
+        
+        # Log response
+        response_data = {
+            "provider": provider,
+            "model": model,
+            "choices": [{"message": {"role": "assistant", "content": response_content}}],
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+        if usage:
+            response_data["usage"] = usage
+        
+        self.log_step("llm.response", response_data)
     
     def log_artifact(
         self,

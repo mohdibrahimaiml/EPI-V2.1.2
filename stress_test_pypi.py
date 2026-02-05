@@ -1,98 +1,48 @@
-#!/usr/bin/env python3
-"""
-Stress test for pip install epi-recorder
-Running 54 installations to test stability and reliability
-"""
 import subprocess
-import sys
 import time
+import sys
 from datetime import datetime
 
-def run_installation_test(iteration):
-    """Run a single installation test and return success/failure"""
-    print(f"[{iteration}/54] Starting installation test at {datetime.now().strftime('%H:%M:%S')}")
+def stress_test(iterations):
+    print(f"Starting stress test: {iterations} iterations of 'pip install epi-recorder --force-reinstall --no-cache-dir'")
+    success_count = 0
+    fail_count = 0
     
-    try:
-        # Run pip install command
-        result = subprocess.run([
-            sys.executable, "-m", "pip", "install", "--upgrade", "epi-recorder"
-        ], capture_output=True, text=True, timeout=300)  # 5 minute timeout
+    start_time = time.time()
+    
+    for i in range(1, iterations + 1):
+        iter_start = time.time()
+        print(f"\n[{i}/{iterations}] Installing epi-recorder...")
         
-        success = result.returncode == 0
-        if success:
-            print(f"[{iteration}/54] ✓ Installation successful")
-        else:
-            print(f"[{iteration}/54] ✗ Installation failed")
-            print(f"  Error: {result.stderr[:200]}...")  # Truncate long errors
-            
-        return success, result.stdout, result.stderr
-    except subprocess.TimeoutExpired:
-        print(f"[{iteration}/54] ✗ Installation timed out")
-        return False, "", "Installation timed out after 5 minutes"
-    except Exception as e:
-        print(f"[{iteration}/54] ✗ Installation error: {str(e)}")
-        return False, "", str(e)
+        try:
+            # Run pip install command
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "install", "epi-recorder", "--force-reinstall", "--no-cache-dir"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            elapsed = time.time() - iter_start
+            print(f"[OK] Success (took {elapsed:.2f}s)")
+            success_count += 1
+        except subprocess.CalledProcessError as e:
+            elapsed = time.time() - iter_start
+            print(f"[FAIL] Failed (took {elapsed:.2f}s)")
+            print(f"Error output: {e.stderr}")
+            fail_count += 1
+        except Exception as e:
+            print(f"[ERROR] Error: {e}")
+            fail_count += 1
 
-def run_uninstall_test():
-    """Uninstall epi-recorder to prepare for next test"""
-    try:
-        result = subprocess.run([
-            sys.executable, "-m", "pip", "uninstall", "-y", "epi-recorder"
-        ], capture_output=True, text=True, timeout=60)
-        
-        if result.returncode == 0:
-            print("✓ Uninstalled successfully")
-        else:
-            print(f"⚠ Uninstall had issues: {result.stderr[:100]}...")
-            
-    except Exception as e:
-        print(f"⚠ Uninstall error: {str(e)}")
-
-def main():
-    print("="*60)
-    print("EPI-RECORDER PIP INSTALL STRESS TEST")
-    print(f"Running 54 installation tests")
-    print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("="*60)
-    
-    successes = 0
-    failures = 0
-    
-    for i in range(1, 55):
-        print()
-        success, stdout, stderr = run_installation_test(i)
-        
-        if success:
-            successes += 1
-        else:
-            failures += 1
-            
-        # Uninstall after each test to prepare for next
-        if i < 54:  # Don't uninstall after the last one
-            print(f"[{i}/54] Uninstalling for next test...")
-            run_uninstall_test()
-        
-        # Small delay between installations
-        time.sleep(2)
-    
-    print()
-    print("="*60)
-    print("STRESS TEST RESULTS")
-    print("="*60)
-    print(f"Total tests: 54")
-    print(f"Successful: {successes}")
-    print(f"Failed: {failures}")
-    print(f"Success rate: {(successes/54)*100:.1f}%")
-    print(f"Completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("="*60)
-    
-    if failures == 0:
-        print("🎉 ALL TESTS PASSED! Installation is stable.")
-    else:
-        print(f"⚠️  {failures} tests failed. Please review installation issues.")
-    
-    return failures == 0
+    total_time = time.time() - start_time
+    print("\n" + "="*30)
+    print("STRESS TEST COMPLETE")
+    print(f"Total Iterations: {iterations}")
+    print(f"Successful: {success_count}")
+    print(f"Failed: {fail_count}")
+    print(f"Total Time: {total_time:.2f}s")
+    print("="*30)
 
 if __name__ == "__main__":
-    success = main()
-    sys.exit(0 if success else 1)
+    # You can change the number of iterations here
+    stress_test(500)

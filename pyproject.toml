@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "epi-recorder"
-version = "2.2.1"
-description = "The Flight Recorder for AI Agents. Debug LangChain & CrewAI with execution tracing."
+version = "2.3.0"
+description = "Verifiable execution evidence for AI systems. Portable, cryptographically signed artifacts."
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -16,30 +16,31 @@ maintainers = [
     {name = "Mohd Ibrahim Afridi", email = "mohdibrahim@epilabs.org"}
 ]
 keywords = [
-    "ai", 
-    "debugging", 
-    "agents", 
-    "langchain", 
-    "crewai", 
-    "devtools",
-    "observability", 
-    "llm", 
-    "openai", 
-    "gemini", 
-    "tracing",
-    "flight-recorder"
+    "evidence",
+    "forensics",
+    "audit",
+    "compliance",
+    "cryptography",
+    "ai",
+    "llm",
+    "verification",
+    "artifact",
+    "execution-trace",
+    "reproducibility",
+    "tamper-evident"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Software Development :: Debuggers",
-    "Topic :: Software Development :: Testing",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security :: Cryptography",
     "Topic :: System :: Logging",
     "Typing :: Typed",
     "Framework :: Pydantic",

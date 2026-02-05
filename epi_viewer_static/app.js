@@ -230,6 +230,14 @@ function renderStep(step) {
         contentDiv.innerHTML = renderLLMRequest(content);
     } else if (kind === 'llm.response') {
         contentDiv.innerHTML = renderLLMResponse(content);
+    } else if (kind === 'llm.error') {
+        contentDiv.innerHTML = renderLLMError(content);
+    } else if (kind === 'http.request') {
+        contentDiv.innerHTML = renderHTTPRequest(content);
+    } else if (kind === 'http.response') {
+        contentDiv.innerHTML = renderHTTPResponse(content);
+    } else if (kind === 'http.error') {
+        contentDiv.innerHTML = renderHTTPError(content);
     } else if (kind === 'security.redaction') {
         contentDiv.innerHTML = renderRedaction(content);
     } else {
@@ -328,6 +336,74 @@ function renderRedaction(content) {
     `;
 }
 
+// Render LLM error
+function renderLLMError(content) {
+    return `
+        <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm">
+            <div class="flex items-center text-red-800">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span class="font-medium">LLM Error</span>
+            </div>
+            <div class="mt-2 text-red-700 font-mono text-xs">
+                ${escapeHTML(content.error || content.message || JSON.stringify(content))}
+            </div>
+            ${content.provider ? `<div class="mt-1 text-xs text-red-600">${content.provider} • ${content.model || 'unknown'}</div>` : ''}
+        </div>
+    `;
+}
+
+// Render HTTP request
+function renderHTTPRequest(content) {
+    return `
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-sm">
+            <div class="flex items-center text-indigo-800 mb-2">
+                <span class="font-medium px-2 py-0.5 bg-indigo-200 rounded text-xs">${content.method || 'GET'}</span>
+                <span class="ml-2 font-mono text-xs break-all">${escapeHTML(content.url || '')}</span>
+            </div>
+            ${content.headers ? `<div class="text-xs text-indigo-600">Headers: ${Object.keys(content.headers).length}</div>` : ''}
+            ${content.body ? `<pre class="mt-2 text-xs bg-indigo-100 p-2 rounded overflow-auto max-h-32">${escapeHTML(typeof content.body === 'string' ? content.body : JSON.stringify(content.body, null, 2))}</pre>` : ''}
+        </div>
+    `;
+}
+
+// Render HTTP response
+function renderHTTPResponse(content) {
+    const statusColor = (content.status_code >= 200 && content.status_code < 300) ? 'green' :
+        (content.status_code >= 400) ? 'red' : 'yellow';
+    return `
+        <div class="bg-${statusColor}-50 border border-${statusColor}-200 rounded-lg p-3 text-sm">
+            <div class="flex items-center text-${statusColor}-800 mb-2">
+                <span class="font-medium px-2 py-0.5 bg-${statusColor}-200 rounded text-xs">${content.status_code || '???'}</span>
+                <span class="ml-2 text-xs">${content.url || ''}</span>
+                ${content.latency_seconds ? `<span class="ml-auto text-xs">⚡ ${content.latency_seconds}s</span>` : ''}
+            </div>
+            ${content.body ? `<pre class="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto max-h-32">${escapeHTML(typeof content.body === 'string' ? content.body.slice(0, 500) : JSON.stringify(content.body, null, 2).slice(0, 500))}${(content.body.length > 500) ? '...' : ''}</pre>` : ''}
+        </div>
+    `;
+}
+
+// Render HTTP error
+function renderHTTPError(content) {
+    return `
+        <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm">
+            <div class="flex items-center text-red-800">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span class="font-medium">HTTP Error</span>
+            </div>
+            <div class="mt-2 text-red-700">
+                <span class="font-mono text-xs">${escapeHTML(content.url || '')}</span>
+            </div>
+            <div class="mt-1 text-red-600 text-xs">
+                ${escapeHTML(content.error || content.message || JSON.stringify(content))}
+            </div>
+        </div>
+    `;
+}
+
 // Escape HTML to prevent XSS
 function escapeHTML(str) {
     const div = document.createElement('div');
@@ -405,4 +481,3 @@ if (document.readyState === 'loading') {
     init();
 }
 
- 
