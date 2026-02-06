@@ -129,7 +129,7 @@ Dev Dependencies:
 ```python
 class ManifestModel(BaseModel):
     # Core metadata
-    epi_version: str = "2.2.0"
+    epi_version: str = "2.3.0"
     created_at: str  # ISO 8601 timestamp
     cli_command: str  # Original trigger command
     

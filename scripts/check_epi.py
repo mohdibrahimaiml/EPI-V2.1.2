@@ -21,7 +21,7 @@ for f in z.namelist():
 # Check viewer for steps
 print('\n=== VIEWER CHECK ===')
 html = z.read('viewer.html').decode('utf-8')
-print('EPI v2.2.0 in footer:', 'EPI v2.2.0' in html)
+print('EPI v2.3.0 in footer:', 'EPI v2.3.0' in html)
 
 # Find embedded data
 import re
