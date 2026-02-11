@@ -103,7 +103,7 @@ No software installation required.
 
 ---
 
-## ⭐ New in v2.3.0
+## ⭐ New in v2.4.0
 
 ### Async Support
 
@@ -322,6 +322,7 @@ This release corrects EPI's evidence capture model.
 
 | Version | Released | Theme | Key Improvements |
 |:--------|:---------|:------|:-----------------|
+| **2.4.0** | 2026-02-12 | **Agent Development** | **Agent Analytics** Engine, **Async/Await** support, **LangGraph** checkpoint integration, **Ollama** local LLM support. |
 | **2.3.0** | 2026-02-06 | **Explicitness** | Explicit `log_llm_call` API, Wrapper Clients (`wrap_openai`), Removal of implicit patching magic. |
 | **2.2.1** | 2026-02-06 | **Fidelity** | Error visibility in Viewer (red badges), guaranteed `steps.jsonl` creation. |
 | **2.2.0** | 2026-01-30 | **Architecture** | **SQLite WAL** for crash-safety, **Async** support, Thread-safe `ContextVars`. |
