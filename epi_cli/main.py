@@ -9,6 +9,13 @@ from rich.console import Console
 
 from epi_cli.keys import generate_default_keypair_if_missing
 
+# Create callback that handles --version
+def version_callback(value: bool):
+    if value:
+        from epi_core import __version__
+        console.print(f"[bold]EPI[/bold] version [cyan]{__version__}[/cyan]")
+        raise typer.Exit()
+
 # Create Typer app
 app = typer.Typer(
     name="epi",
@@ -41,14 +48,25 @@ Tips:
 """,
     add_completion=False,
     no_args_is_help=True,
-    rich_markup_mode="rich"
+    rich_markup_mode="rich",
+    # Add version option
+    callback=None  # Will set via decorator below
 )
 
 console = Console()
 
 
 @app.callback()
-def main_callback():
+def main_callback(
+    version: bool = typer.Option(
+        False,
+        "--version",
+        "-v",
+        help="Show version and exit",
+        callback=version_callback,
+        is_eager=True
+    )
+):
     """
     Main callback - runs before any command.
     
