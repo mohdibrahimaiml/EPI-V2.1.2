@@ -4,7 +4,7 @@ The Agent Analytics Engine provides powerful insights into agent performance acr
 
 ## Installation
 
-Analytics is included with EPI Recorder v2.3.0+:
+Analytics is included with EPI Recorder v2.4.0+:
 
 ```bash
 pip install epi-recorder

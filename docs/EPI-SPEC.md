@@ -1,15 +1,15 @@
-# EPI File Format Specification v2.3.0
+# EPI File Format Specification v2.4.0
 
 **Status:** Draft  
-**Date:** 2026-02-06  
-**Version:** 2.3.0  
+**Date:** 2026-02-12  
+**Version:** 2.4.0  
 **Authors:** EPI Project Team
 
 ---
 
 ## Abstract
 
-The **Executable Package for AI (EPI)** format provides a standardized, portable, and verifiable container for AI evidence. This specification defines the structure, serialization, and verification mechanisms for `.epi` files as implemented in `epi-recorder` v2.3.0.
+The **Executable Package for AI (EPI)** format provides a standardized, portable, and verifiable container for AI evidence. This specification defines the structure, serialization, and verification mechanisms for `.epi` files as implemented in `epi-recorder` v2.4.0.
 
 ---
 
@@ -99,7 +99,8 @@ Newline-Delimited JSON storage of events.
 
 | Version | Date | Status | Changes |
 |:---|:---|:---|:---|
-| **2.3.0** | 2026-02-06 | **Current** | Explicit evidence capture, wrapper clients, monkey patching removal. |
+| **2.4.0** | 2026-02-12 | **Current** | Agent Analytics Engine, Async/Await support, LangGraph integration, Ollama local LLM support. |
+| **2.3.0** | 2026-02-06 | Previous | Explicit evidence capture, wrapper clients, monkey patching removal. |
 | **2.2.0** | 2026-01-30 | Legacy | Thread-safe recording, SQLite storage, `epi debug` command, Async API, MIT license. |
 | **2.1.3** | 2026-01-24 | Previous | Gemini Native Support (Patcher + Chat). |
 | **2.1.2** | 2025-01-17 | Previous    | Critical security fix (Client-side Verification), Spec v1.1-json. |

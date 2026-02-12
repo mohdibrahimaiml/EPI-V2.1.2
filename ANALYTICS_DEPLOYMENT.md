@@ -261,5 +261,5 @@ Built, tested, documented, and deployed in one session.
 ---
 
 *Generated: 2026-02-12*  
-*EPI Recorder v2.3.0*  
+*EPI Recorder v2.4.0*  
 *Agent Analytics Engine v1.0.0*
