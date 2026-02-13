@@ -9,10 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://pypi.org/project/epi-recorder/"><img src="https://img.shields.io/pypi/v/epi-recorder?style=for-the-badge&color=00d4ff&label=PyPI&cacheSeconds=0" alt="PyPI"/></a>
-  <a href="https://github.com/mohdibrahimaiml/epi-recorder"><img src="https://img.shields.io/badge/python-3.11%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python"/></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License"/></a>
-  <a href="https://pepy.tech/project/epi-recorder"><img src="https://img.shields.io/badge/downloads-6.5K%2B-orange?style=for-the-badge" alt="Downloads"/></a>
+  <a href="https://pypi.org/project/epi-recorder/"><img src="https://img.shields.io/pypi/v/epi-recorder?style=flat-square&label=pypi&color=0073b7" alt="PyPI Version"/></a>
+  <a href="https://pepy.tech/project/epi-recorder"><img src="https://img.shields.io/pepy/dt/epi-recorder?style=flat-square&label=downloads&color=0073b7" alt="Downloads"/></a>
+  <a href="https://github.com/mohdibrahimaiml/epi-recorder"><img src="https://img.shields.io/pypi/pyversions/epi-recorder?style=flat-square&color=0073b7" alt="Python"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/mohdibrahimaiml/epi-recorder?style=flat-square&color=0073b7" alt="License"/></a>
+  <a href="https://github.com/mohdibrahimaiml/epi-recorder/stargazers"><img src="https://img.shields.io/github/stars/mohdibrahimaiml/epi-recorder?style=flat-square&color=0073b7" alt="Stars"/></a>
 </p>
 
 ---
