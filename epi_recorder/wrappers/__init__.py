@@ -5,6 +5,7 @@ Provides transparent tracing without monkey patching.
 """
 
 from epi_recorder.wrappers.openai import wrap_openai, TracedOpenAI, TracedCompletions, TracedChat
+from epi_recorder.wrappers.anthropic import wrap_anthropic, TracedAnthropic, TracedMessages
 from epi_recorder.wrappers.base import TracedClientBase
 
 __all__ = [
@@ -12,5 +13,8 @@ __all__ = [
     "TracedOpenAI",
     "TracedCompletions",
     "TracedChat",
+    "wrap_anthropic",
+    "TracedAnthropic",
+    "TracedMessages",
     "TracedClientBase",
 ]

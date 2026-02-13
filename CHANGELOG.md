@@ -45,6 +45,43 @@ After v3.0.0, the `.epi` format should be:
 
 ---
 
+## [2.5.0] – 2026-02-13
+
+### 🚀 Major Features
+
+#### Added
+
+**Anthropic Claude Wrapper**
+- `wrap_anthropic()` — proxy wrapper for Anthropic's Claude API
+- `TracedAnthropic` — fully wrapped client with automatic evidence capture
+- `TracedMessages` — traced `messages.create()` for Claude conversations
+- Captures `temperature`, `top_p`, and `system` parameters in evidence logs
+- Full request/response logging: messages, tokens, latency, model info
+- Mirrors `wrap_openai()` architecture for consistency
+
+**Enhanced Provider Support**
+- Anthropic now has first-class wrapper support (not just explicit API)
+- Updated supported providers table
+
+#### Fixed
+
+**Critical: Path Resolution Bug**
+- Fixed `_resolve_output_path()` double-prepending `epi-recordings/` directory
+- Before: `record("epi-recordings/test.epi")` → `epi-recordings/epi-recordings/test.epi` (broken)
+- After: `record("epi-recordings/test.epi")` → `epi-recordings/test.epi` (correct)
+- Root cause: relative paths containing the recordings directory name were not detected
+
+**Signing & Verification**
+- Confirmed Ed25519 signing and verification are fully operational
+- Fixed file creation appearing to fail due to path resolution bug above
+
+#### Internal
+- Comprehensive signing/verification test suite
+- Path resolution test coverage
+- Anthropic wrapper test suite (19 tests, 100% pass rate)
+
+---
+
 ## [2.4.0] – 2026-02-12
 
 ### 🚀 Major Features

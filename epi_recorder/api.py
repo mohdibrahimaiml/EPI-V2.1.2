@@ -727,9 +727,18 @@ def _resolve_output_path(output_path: Optional[Path | str]) -> Path:
     if path.is_absolute():
         return path
         
-    # If path is relative, prepend recordings directory
+    # If path is relative, prepend recordings directory UNLESS it already starts with it
     recordings_dir = Path(os.getenv("EPI_RECORDINGS_DIR", "epi-recordings"))
     recordings_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Check if path already starts with the recordings directory
+    # This prevents double-prepending (e.g., epi-recordings/epi-recordings/file.epi)
+    path_parts = path.parts
+    if path_parts and path_parts[0] == recordings_dir.name:
+        # Path already includes recordings directory, use as-is
+        return path
+    
+    # Path doesn't include recordings directory, prepend it
     return recordings_dir / path
 
 

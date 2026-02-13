@@ -181,7 +181,7 @@ Every agent run becomes a `.epi` file containing:
 
 ---
 
-## ⭐ New in v2.4.0
+## ⭐ New in v2.5.0
 
 ### Async Support
 
@@ -406,10 +406,11 @@ flowchart LR
 
 ## Roadmap
 
-**Current (v2.4.0):**
+**Current (v2.5.0):**
 - ✅ Capture, verify, replay agent runs
 - ✅ LangGraph checkpoint integration
 - ✅ Agent analytics across runs
+- ✅ Anthropic Claude wrapper
 
 **Next 6 months:**
 - Time-travel debugging (step through any past run)
@@ -462,7 +463,7 @@ Signatures are **optional but recommended**. Unsigned artifacts are valid but ca
 | Provider | Capture Method |
 |:---------|:---------------|
 | OpenAI | Wrapper client (`wrap_openai`) or explicit API |
-| Anthropic | Explicit API (`log_llm_call`) |
+| Anthropic | Wrapper client (`wrap_anthropic`) or explicit API |
 | Google Gemini | Explicit API |
 | Ollama (local) | Wrapper client (OpenAI-compatible) |
 | Any HTTP LLM | Explicit API via `log_llm_call()` |
@@ -475,6 +476,7 @@ EPI doesn't depend on provider-specific integrations—the explicit API works wi
 
 | Version | Released | Theme | Key Improvements |
 |:--------|:---------|:------|:-----------------|
+| **2.5.0** | 2026-02-13 | **Anthropic & Fixes** | **Anthropic Claude** wrapper (`wrap_anthropic`), critical path resolution fix, enhanced parameter tracking. |
 | **2.4.0** | 2026-02-12 | **Agent Development** | **Agent Analytics** Engine, **Async/Await** support, **LangGraph** checkpoint integration, **Ollama** local LLM support. |
 | **2.3.0** | 2026-02-06 | **Explicitness** | Explicit `log_llm_call` API, Wrapper Clients (`wrap_openai`), Removal of implicit patching magic. |
 | **2.2.1** | 2026-02-06 | **Fidelity** | Error visibility in Viewer (red badges), guaranteed `steps.jsonl` creation. |

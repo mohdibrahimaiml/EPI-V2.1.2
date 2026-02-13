@@ -4,7 +4,7 @@ EPI Recorder - Runtime interception and workflow capture.
 Python API for recording AI workflows with cryptographic verification.
 """
 
-__version__ = "2.4.0"
+__version__ = "2.5.0"
 
 # Export Python API
 from epi_recorder.api import (
